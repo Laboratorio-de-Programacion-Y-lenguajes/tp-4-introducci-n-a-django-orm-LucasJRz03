@@ -23,7 +23,7 @@ class Categoria(models.Model):
     Categoría temática de libros.
     Ejemplos: 'fantasía', 'ciencia ficción', 'historia'.
     """
-    nombre = models.CharField(max_lenght=50, unique=True)
+    nombre = models.CharField(max_length=50, unique=True)
 
     def __str__(self) -> str:
         return self.nombre
@@ -41,7 +41,7 @@ class Libro(models.Model):
     # autor           → ForeignKey(Autor, on_delete=models.PROTECT)
     # categorias      → ManyToManyField(Categoria)
     
-    titulo = models.CharField(max_lenght=100)
+    titulo = models.CharField(max_length=100)
     isbn = models.CharField(unique=True)
     fecha_publicacion = models.DateField()
     cantidad_total = models.PositiveIntegerField(default=1)
@@ -95,7 +95,7 @@ class Prestamo(models.Model):
     # fecha_devolucion   → DateField (null=True, blank=True)
     
     libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
-    nombre_prestatario = models.CharField(max_lenght=50)
+    nombre_prestatario = models.CharField(max_length=50)
     fecha_prestamo = models.DateField(default=timezone.now)
     fecha_devolucion = models.DateField(null=True, blank=True)
 

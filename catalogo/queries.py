@@ -45,7 +45,9 @@ def autores_con_mas_de_n_libros(n: int):
     #   Autor.objects.annotate(cantidad_libros=Count("libro"))
     # Pista 2: luego filtrá
     #   .filter(cantidad_libros__gt=n)
-    raise NotImplementedError
+   
+    return Autor.objects.annotate(
+     cantidad_libros = Count('libro')).filter(cantidad_libros_gt=n)
 
 
 def libros_sin_disponibilidad():
