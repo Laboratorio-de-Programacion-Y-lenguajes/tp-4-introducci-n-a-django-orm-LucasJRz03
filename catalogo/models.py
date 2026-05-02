@@ -69,7 +69,8 @@ class Libro(models.Model):
         # TODO: implementar con ORM usando filter sobre los préstamos relacionados
         # Pista: self.prestamo_set.filter(fecha_devolucion__isnull=True).count()
         #        (o el related_name que hayas definido en Prestamo.libro)
-        raise NotImplementedError
+        return self.prestamo_set.filter(fecha_devolucion__isnull=True).count()
+
 
     def disponibles(self) -> int:
         """
@@ -77,12 +78,12 @@ class Libro(models.Model):
         cantidad_total - prestamos_activos()
         """
         # TODO: implementar
-        raise NotImplementedError
+        return self.cantidad_total - self.prestamos_activos()
 
     def tiene_disponibles(self) -> bool:
         """Retorna True si hay al menos una copia disponible."""
         # TODO: implementar
-        raise NotImplementedError
+        
 
 
 class Prestamo(models.Model):
