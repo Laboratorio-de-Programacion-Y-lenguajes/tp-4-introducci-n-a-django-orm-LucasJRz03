@@ -33,7 +33,6 @@ class Libro(models.Model):
     Libro del catálogo de la biblioteca.
     Tiene relación N:1 con Autor y N:M con Categoria.
     """
-
     # TODO: implementar los campos:
     # titulo          → CharField
     # isbn            → CharField (unique=True)
@@ -49,7 +48,6 @@ class Libro(models.Model):
     autor = models.ForeignKey(Autor, on_delete=models.PROTECT)
     categorias = models.ManyToManyField(Categoria)
 
-
     # Preguntas guía:
     # ¿Qué pasa si eliminás un autor que tiene libros? (PROTECT vs CASCADE)
     # En este caso, usando PROTECT, no se te permitiría borrar el autor
@@ -59,7 +57,6 @@ class Libro(models.Model):
     # Es el identificador del libro, no deberían haber
     # 2 libros con el mismo ISBN.
     
-
     def prestamos_activos(self) -> int:
         """
         Retorna la cantidad de préstamos activos (fecha_devolucion IS NULL).
@@ -83,8 +80,7 @@ class Libro(models.Model):
     def tiene_disponibles(self) -> bool:
         """Retorna True si hay al menos una copia disponible."""
         # TODO: implementar
-        
-
+        return self.disponibles() > 0
 
 class Prestamo(models.Model):
     """
@@ -97,11 +93,17 @@ class Prestamo(models.Model):
     # nombre_prestatario → CharField
     # fecha_prestamo     → DateField
     # fecha_devolucion   → DateField (null=True, blank=True)
-    #
+    
+    libro = models.ForeignKey(Libro, on_delete=models.CASCADE)
+    nombre_prestatario = models.CharField(max_lenght=50)
+    fecha_prestamo = models.DateField(default=timezone.now)
+    fecha_devolucion = models.DateField(null=True, blank=True)
+
     # Preguntas guía:
     # ¿Por qué usamos CASCADE aquí y PROTECT en Libro→Autor?
+     # Si el libro se elimina, también el prestamo. A diferencia de Libro->Autor
+    # En este caso, el prestamo no tiene razón de existir si el libro con el que está
+    # relacionado se borra.
     # ¿Qué valor por defecto tendría sentido para fecha_prestamo?
-    # Tip: podés usar default=timezone.now si querés fecha automática,
-    #      o dejarlo sin default para que el test lo defina explícitamente.
-
-    pass
+    # Tendría sentido usar la fecha actual de la creación del Prestamo
+    # usando default=timezone.now que define la fecha actual, pero que te permite modificarla luego, útil para test
