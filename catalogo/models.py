@@ -42,7 +42,7 @@ class Libro(models.Model):
     # categorias      → ManyToManyField(Categoria)
     
     titulo = models.CharField(max_length=100)
-    isbn = models.CharField(unique=True)
+    isbn = models.CharField(unique=True, max_length=100)
     fecha_publicacion = models.DateField()
     cantidad_total = models.PositiveIntegerField(default=1)
     autor = models.ForeignKey(Autor, on_delete=models.PROTECT)
