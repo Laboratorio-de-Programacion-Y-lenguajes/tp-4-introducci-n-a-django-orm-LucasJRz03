@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from django.db.models import Count, Q
+from django.db.models import Count, Q, F
 
 from .models import Autor, Libro
 
@@ -67,7 +67,9 @@ def libros_sin_disponibilidad():
         ).filter(activos=models.F("cantidad_total"))
     """
     # TODO: implementar con annotate + F expression + filter
-    raise NotImplementedError
+    return Libro.object.annotate(
+        activos=Count("prestamo", filter=Q(prestamo__fecha__devolucion__isnull=True)
+        ).filter(cantidad_total__lte=F('activos')))
 
 
 def top_n_libros_mas_prestados(n: int):
