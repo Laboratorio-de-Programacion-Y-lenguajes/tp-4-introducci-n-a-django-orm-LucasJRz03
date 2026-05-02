@@ -28,8 +28,6 @@ class Categoria(models.Model):
     def __str__(self) -> str:
         return self.nombre
 
-
-
 class Libro(models.Model):
     """
     Libro del catálogo de la biblioteca.
@@ -43,12 +41,24 @@ class Libro(models.Model):
     # cantidad_total  → PositiveIntegerField
     # autor           → ForeignKey(Autor, on_delete=models.PROTECT)
     # categorias      → ManyToManyField(Categoria)
-    #
+    
+    titulo = models.CharField(max_lenght=100)
+    isbn = models.CharField(unique=True)
+    fecha_publicacion = models.DateField()
+    cantidad_total = models.PositiveIntegerField(default=1)
+    autor = models.ForeignKey(Autor, on_delete=models.PROTECT)
+    categorias = models.ManyToManyField(Categoria)
+
+
     # Preguntas guía:
     # ¿Qué pasa si eliminás un autor que tiene libros? (PROTECT vs CASCADE)
+    # En este caso, usando PROTECT, no se te permitiría borrar el autor
+    # Porque esta relacionado a 'X' libro (O borro primero los libros o los reasigno a otro autor).
+   
     # ¿Por qué isbn debe ser único?
-
-    pass
+    # Es el identificador del libro, no deberían haber
+    # 2 libros con el mismo ISBN.
+    
 
     def prestamos_activos(self) -> int:
         """
