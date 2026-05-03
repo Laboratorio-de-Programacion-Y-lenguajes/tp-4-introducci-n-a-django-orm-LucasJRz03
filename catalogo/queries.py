@@ -47,7 +47,7 @@ def autores_con_mas_de_n_libros(n: int):
     #   .filter(cantidad_libros__gt=n)
    
     return Autor.objects.annotate(
-     cantidad_libros = Count('libro')).filter(cantidad_libros_gt=n)
+     cantidad_libros = Count('libro')).filter(cantidad_libros__gt=n)
 
 
 def libros_sin_disponibilidad():
@@ -67,9 +67,10 @@ def libros_sin_disponibilidad():
         ).filter(activos=models.F("cantidad_total"))
     """
     # TODO: implementar con annotate + F expression + filter
-    return Libro.object.annotate(
-        activos=Count("prestamo", filter=Q(prestamo__fecha__devolucion__isnull=True)
-        ).filter(cantidad_total__lte=F('activos')))
+    return Libro.objects.annotate(
+               activos=Count("prestamo", filter=Q(prestamo__fecha_devolucion__isnull=True))
+               ).filter(cantidad_total__lte=F('activos'))
+        
 
 
 def top_n_libros_mas_prestados(n: int):
@@ -87,4 +88,6 @@ def top_n_libros_mas_prestados(n: int):
                      .order_by("-total_prestamos")[:n]
     """
     # TODO: implementar con annotate + order_by + slicing
-    raise NotImplementedError
+    return Libro.objects.annotate(
+        total_prestamos=Count("prestamo")
+      ).order_by('-total_prestamos')[:n]
